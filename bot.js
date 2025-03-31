@@ -2,6 +2,7 @@ const fs = require('fs')
 const puppeteer =require("puppeteer");
 const TelegramBot = require("node-telegram-bot-api")
 const conf = JSON.parse(fs.readFileSync('conf.json'));
+const { linkSearcher } = require("./searcher.js")
 
 const tokenBot=conf.telegramKey;
 const bot = new TelegramBot(tokenBot,{polling:true})
@@ -26,8 +27,10 @@ bot.on("message",async (msg)=>{
         const page = await browser.newPage();
         await page.goto(link);
         let content = await page.content();
+        let addresses = linkSearcher(content.replaceAll("\"",""),request);
+        console.log(addresses)
         await browser.close();
-        bot.sendMessage(chatId,content.slice(0,4000))
+        //bot.sendMessage(chatId,content.slice(0,4000))
     }
 
     if(!result){
