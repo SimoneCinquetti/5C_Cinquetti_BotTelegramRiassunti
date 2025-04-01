@@ -3,10 +3,21 @@ const puppeteer =require("puppeteer");
 const TelegramBot = require("node-telegram-bot-api")
 const conf = JSON.parse(fs.readFileSync('conf.json'));
 const { linkSearcher } = require("./searcher.js")
+const { createSummarizer } = require("./summarizer.js")
 
 const tokenBot=conf.telegramKey;
 const bot = new TelegramBot(tokenBot,{polling:true})
 
+const summarizer = createSummarizer();
+summarizer.build(conf.textApiKey)
+summarizer.summarize(`The concept of nuclear fusion has been described in Chapter 12. It is summarized in Figure
+14-1, which is analogous to Figure 13-2 for nuclear fission. As the nuclei of two light
+atoms are brought closer to each other, they become increasingly destabilized, due to the
+electric repulsion of their positive charges. Work must be expended to achieve this and so
+the energy of the two nuclei increases. If this “activation energy” is provided to overcome
+the repulsive forces, fusion of the two nuclei into a stable heavier nucleus will take place
+and a large amount of energy will be released. The net energy output is potentially larger in
+the case of fusion than in the case of fission`)
 
 bot.on("message",async (msg)=>{
     let result = false
